@@ -11,9 +11,7 @@ import RxCocoa
 
 protocol UserDetailViewModelType: class {
     var rx_title: Driver<String> { get }
-    var rx_username: Driver<String> { get }
-    
-    var user: Observable<User> { get set }
+    var user: Observable<User> { get }
 }
 
 final class UserDetailViewModel: UserDetailViewModelType {
@@ -21,7 +19,6 @@ final class UserDetailViewModel: UserDetailViewModelType {
     // MARK: Properties
     
     var rx_title: Driver<String> = .just("User Detail")
-    var rx_username: Driver<String> = .just("")
     
     var user: Observable<User>
     
@@ -31,7 +28,7 @@ final class UserDetailViewModel: UserDetailViewModelType {
     
     init(dataProvider: UserDataProviderType) {
         self.dataProvider = dataProvider
-        
+    
         user = dataProvider.fetchData().shareReplay(1)
     }
 }

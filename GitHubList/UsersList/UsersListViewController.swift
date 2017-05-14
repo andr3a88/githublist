@@ -13,6 +13,7 @@ import RxCocoa
 final class UsersListViewController: UIViewController, UITableViewDelegate {
     
     // MARK: IBOutlets
+    
     @IBOutlet var tableView: UITableView!
     
     // MARK: Properties
@@ -37,18 +38,19 @@ final class UsersListViewController: UIViewController, UITableViewDelegate {
         
         viewModel.rx_usersFetched
             .bind(to: tableView.rx.items(cellIdentifier: "UserCell")) { (tableView, user, cell) in
-                
                 cell.textLabel?.text = user.username
                 cell.detailTextLabel?.text = user.avatarUrl
             }
             .addDisposableTo(disposeBag)
         
-        tableView.rx.itemSelected
-            .subscribe(onNext: { [unowned self] (indexPath) in
-                self.tableView.cellForRow(at: indexPath)?.isSelected = true
+        tableView.rx
+            .modelSelected(User.self)
+            .subscribe(onNext:  { user in
+                self.viewModel.toUserDetail(user: user)
             })
-            .addDisposableTo(disposeBag)
-        tableView.rx.itemDeselected
+            .disposed(by: disposeBag)
+        
+        tableView.rx.itemSelected
             .subscribe(onNext: { [unowned self] (indexPath) in
                 self.tableView.cellForRow(at: indexPath)?.isSelected = false
             })

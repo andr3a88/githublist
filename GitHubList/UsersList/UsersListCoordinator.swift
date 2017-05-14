@@ -8,10 +8,16 @@
 
 import UIKit
 
-final class UsersListCoordinator: Coordinator {
+final class UsersListCoordinator: Coordinator, UsersListViewModelCoordinatorDelegate {
     
-    private weak var usersListViewController: UsersListViewController?
+    // MARK: Properties
+    
+    private var usersListViewController: UsersListViewController?
+    private var userDetailCoordinator: UserDetailCoordinator?
+    
     private weak var navigationController: UINavigationController?
+    
+    // MARK: Methods
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -26,9 +32,17 @@ final class UsersListCoordinator: Coordinator {
         }
         let dataProvider = UsersDataProvider()
         viewController.viewModel = UsersListViewModel(dataProvider: dataProvider)
+        viewController.viewModel.coordinatorDelegate = self
         
         navigationController.pushViewController(viewController, animated: true)
         
         usersListViewController = viewController
+    }
+    
+    func usersListViewModelToUserDetail(user: User) {
+        guard let navigationController = navigationController else { return }
+        
+        userDetailCoordinator = UserDetailCoordinator(navigationController: navigationController, user: user)
+        userDetailCoordinator?.start()
     }
 }

@@ -11,6 +11,10 @@ import RxCocoa
 
 class UserDetailViewController: UIViewController {
     
+    // MARK: IBOutlets
+    
+    @IBOutlet var usernameLabel: UILabel!
+    
     // MARK: Properties
     
     let disposeBag = DisposeBag()
@@ -29,5 +33,11 @@ class UserDetailViewController: UIViewController {
         viewModel.rx_title
             .drive(rx.title)
             .addDisposableTo(disposeBag)
+        
+        viewModel.user
+            .subscribe(onNext: { [weak self] user  in
+                self?.usernameLabel.text = user.toString()
+            })
+            .disposed(by: disposeBag)
     }
 }

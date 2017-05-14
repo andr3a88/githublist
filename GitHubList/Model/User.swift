@@ -15,8 +15,11 @@ struct User: Mappable {
     var avatarUrl: String?
     var url: String!
     var createdAt: Date!
+    var email: String?
+    var company: String?
+    var location: String?
     
-    // MARK: JSON
+    // MARK: Mapping
     
     init?(map: Map) { }
     
@@ -25,6 +28,9 @@ struct User: Mappable {
         username <- map["login"]
         url <- map["url"]
         avatarUrl <- map["avatar_url"]
+        email <- map["email"]
+        company <- map["company"]
+        location <- map["location"]
         
         let dateTransform = TransformOf<Date, String>(fromJSON: { (value) -> Date? in
             guard let value = value else { return nil }
@@ -32,7 +38,23 @@ struct User: Mappable {
         }, toJSON: {
             $0.map { String(describing: $0) }
         })
-        createdAt <- (map["created_At"], dateTransform)
+        createdAt <- (map["created_at"], dateTransform)
+    }
+    
+    // MARK: Static
+    
+    func toString() -> String {
+        var userDescription = self.username
+        if let email = self.email {
+            userDescription?.append("\n\(email)")
+        }
+        if let company = self.company {
+            userDescription?.append("\n\(company)")
+        }
+        if let location = self.location {
+            userDescription?.append("\n\(location)")
+        }
+        return userDescription!
     }
     
 }

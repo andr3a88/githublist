@@ -22,8 +22,16 @@ Optional: order by username
 * When clicking on the email address, the default email app, installed on the device should open up.
 
 
-### Upload your code to this repository, how you would do it in a real project.
+### GitHub user list (MVVM-C + RXSwift)
 
-***We encourage you to use third party libraries, if you need them.***
++ MVVM-Coordiantors 
++ RXSwift
++ Moya
 
-*Happy Coding!
+## TO-DO
+
++ View Loader
++ Pagination
++ Refresh Control
++ Search
++ Show avatar

@@ -16,8 +16,21 @@ protocol UserDataProviderType {
 
 final class UserDataProvider: UserDataProviderType {
     
+    // MARK: Properties
+    
+    private var user: User
+    
+    // MARK: Methods
+    
+    init(user: User) {
+        self.user = user
+    }
+    
     func fetchData() -> Observable<User> {
-        return RxMoyaProvider<GitHubService>().request(.showUser(username: "andr3a88"))
+        guard let username = user.username else {
+            return Observable.error(NSError(domain: "NoUserFound", code: 0, userInfo: nil))
+        }
+        return RxMoyaProvider<GitHubService>().request(.showUser(username: username))
             .filterSuccessfulStatusCodes()
             .mapJSON()
             .flatMapLatest(parseResponse)
